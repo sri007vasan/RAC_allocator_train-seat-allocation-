@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Booking System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-top: 10px;
+        }
+        input, select, button {
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Train Booking System</h2>
+        <form id="bookingForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="from_station">From Station:</label>
+            <select id="from_station" name="from_station">
+                <option>Madurai</option>
+                <option>Dindigul</option>
+                <option>Trichy</option>
+                <option>Villupuram</option>
+                <option>Chennai</option>
+            </select>
+            
+            <label for="to_station">To Station:</label>
+            <select id="to_station" name="to_station">
+                <option>Madurai</option>
+                <option>Dindigul</option>
+                <option>Trichy</option>
+                <option>Villupuram</option>
+                <option>Chennai</option>
+            </select>
+            
+            <button type="submit">Check Availability</button>
+        </form>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById("bookingForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            fetch("/allocate-seat", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById("result");
+                if (data.error) {
+                    resultDiv.textContent = data.error;
+                    resultDiv.style.color = "red";
+                } else {
+                    resultDiv.textContent = `Seat Allocated: ${data.seat}, Extra Charge: ${data.extra_charge}`;
+                    resultDiv.style.color = "green";
+                }
+            });
+        });
+    </script>
+</body>
+</html>
